@@ -1,0 +1,84 @@
+<head oncontextmenu='return false;' onkeydown='return false;' onmousedown='return false;'>
+<meta charset=utf-8>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Tes Deteksi Lokasi Anda</title>
+<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+<link href="http://fonts.googleapis.com/css?family=Open+Sans+Condensed:700,300" rel="stylesheet" type="text/css">
+<link href="https://cdn.rawgit.com/gpsnetsosial/akunmedia/926af480/style.css" rel="stylesheet" type="text/css">
+<body oncontextmenu='return false;' onkeydown='return false;' onmousedown='return false;'>
+<section id="wrapper">
+    <header>
+      <h2>Tes Deteksi Lokasi Anda</h2>
+    </header>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=false"></script>
+    <article>
+    	<span id="button"><a href="#" id="ahref">DETEKSI</a></span><br>
+      <span id="status"></span>
+    </article>
+<script>
+$("#button").click(function() {
+function success(position) {
+  var s = document.querySelector('#status');
+  
+  if (s.className == 'success') {
+    // not sure why we're hitting this twice in FF, I think it's to do with a cached result coming back    
+    return;
+  }
+  
+  s.innerHTML = "Lokasi Anda telah terdeteksi <br /> Untuk menjaga privacy Anda, Kami menonaktifkan fitur zoom/perbesaran peta pada <br /> halaman <b>Tes</b> Deteksi ini.";
+  s.className = 'success';
+  
+  var mapcanvas = document.createElement('div');
+  mapcanvas.id = 'mapcanvas';
+  mapcanvas.style.height = '400px';
+  mapcanvas.style.width = '560px';
+    
+  document.querySelector('article').appendChild(mapcanvas);
+  
+  var latlng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+  var myOptions = {
+    zoom: 1,
+    center: latlng,
+    mapTypeControl: false,
+    navigationControlOptions: {style: google.maps.NavigationControlStyle.SMALL},
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  var map = new google.maps.Map(document.getElementById("mapcanvas"), myOptions);
+  
+  var marker = new google.maps.Marker({
+      position: latlng, 
+      map: map, 
+      title:"Anda ada di radius "+position.coords.accuracy+")"
+  });
+}
+
+
+function error(msg) {
+  var s = document.querySelector('#status');
+  s.innerHTML = typeof msg == 'string' ? msg : "failed";
+  s.className = 'fail';
+  
+  // console.log(arguments);
+}
+
+
+
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(success, error);
+} else {
+  error('not supported');
+} 
+});
+</script>
+
+
+<a style=position: fixed; top:20px;>
+<img height="600" width="600" src='https://cdn.rawgit.com/gpsnetsosial/akunmedia/926af480/bgtr.png'/></a>
+
+<a style='position: fixed; top:150px;left:0px;' title='  ' >
+<img height="3350" width="970" src='https://cdn.rawgit.com/gpsnetsosial/akunmedia/926af480/bgtr.png'/></a>
+
+
+</body>
+</html>
